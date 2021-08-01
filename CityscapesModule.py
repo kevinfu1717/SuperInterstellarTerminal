@@ -75,4 +75,4 @@ if __name__=='__main__':
 	im_path='testpic/test0.jpg'
 	im=cv2.imread(im_path)
 	rc,pred=seg.run(im)
-	cv2.imwrite('pred',pred*10)
+	cv2.imwrite('pred.jpg',pred*10)
