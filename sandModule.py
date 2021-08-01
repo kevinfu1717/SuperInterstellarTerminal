@@ -1,6 +1,8 @@
 import paddlehub as hub
 import cv2
 import numpy as np
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 ##
 resultCode=[{99:'运行报错'},
          {100:'dst发送的图片异常'},
