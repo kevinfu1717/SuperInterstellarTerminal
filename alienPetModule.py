@@ -8,6 +8,7 @@ import paddle
 import random
 # from CityscapesModule import cistyScaperClass
 from ConfigPet import config as configAlienPet
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 paddle.disable_static()
 try:
     from ConfigPet import resultCode
