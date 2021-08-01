@@ -12,6 +12,7 @@ from paddleseg.utils import logger, progbar,visualize,load_entire_model
 from paddleseg.transforms import transforms as T
 from paddleseg.cvlibs import manager, Config
 from PaddleSeg.contrib.CityscapesSOTA.models.mscale_ocrnet import *
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 try:
 	from ConfigCityscapes import resultCode
 except:
@@ -70,8 +71,8 @@ class cistyScaperClass():
 			return self.resultCode[7],pred
 		return  self.resultCode[4],pred
 if __name__=='__main__':
-	seg=cistyScaper()
-	im_path='/home/aistudio/test0.jpg'
+	seg=cistyScaperClass()
+	im_path='testpic/test0.jpg'
 	im=cv2.imread(im_path)
 	rc,pred=seg.run(im)
 	cv2.imwrite('pred',pred*10)
