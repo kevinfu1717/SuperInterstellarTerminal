@@ -1,7 +1,5 @@
 # Super Interstellar Terminal
 超级星际终端——A Wechat Social Game with AR and LBS
-# 星际终端
-
 
    - **A. 项目介绍**
    
