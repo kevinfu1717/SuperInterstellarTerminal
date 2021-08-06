@@ -4,7 +4,20 @@ import cv2
 import numpy as np
 # import moviepy.video.io.ImageSequenceClip
 import time
+import base64
 # from triangulation import measure_triangle, affine_triangle, morph_triangle
+def picpath2base64(image_path):
+    #image_path = './test_image/test1.jpg'
+    img_file = open(image_path, 'rb')
+    img_b64encode = base64.b64encode(img_file.read())
+    ##bytes 2 string
+    return img_b64encode.decode('utf8')
+def base64CV(img_raw_base64):
+    #string 2 bytes
+    img_b64decode = base64.b64decode(img_raw_base64.encode('utf8'))  # base64解码
+    img_array = np.fromstring(img_b64decode, np.uint8)  # 转换np序列
+    img_opencv = cv2.imdecode(img_array, cv2.IMREAD_COLOR)  # 转换Opencv格式 BGR
+    return img_opencv
 def landmarkCenter(landmark):
     # height=np.max(landmark[:,1])-np.min(landmark[:,1])
     # width=np.max(landmark[:,0])-np.min(landmark[:,0])
@@ -141,7 +154,7 @@ def roiAreaCheck(src,maskSrc,dst,leftTop):
     #print('x1,x2,y1,y2', x1, x2, y1, y2, src.shape,maskSrc.shape,rightdown-leftTop)
     return src,maskSrc,leftTop,rightdown,x1,x2,y1,y2
 def leftTop2Center(leftTop,src):
-    center=(round (leftTop[0]+src.shape[1]/2),round(leftTop[1]+src.shape[0]/2))
+    center=(int(round (leftTop[0]+src.shape[1]/2)),int(round(leftTop[1]+src.shape[0]/2)))
 
     return center
 def hardPaste(dstOri,newleftTop,newrightDown,maskHead3,srcHead):

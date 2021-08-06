@@ -20,8 +20,12 @@ from sandModule import sandClass
 import paddle
 
 paddle.disable_static()
+# paddle.device.set_device("cpu")
+def minimizeInput(img,size):
 
-
+    ratio=size/max(img.shape[:2])
+    img=cv2.resize(img,None,fx=ratio,fy=ratio)
+    return img
 class ImgGenerator():
     def __init__(self, debug=False,
                  ymlPathSeg='PetModel/mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml',
@@ -29,9 +33,13 @@ class ImgGenerator():
                  modelPathSand='msgnet',
                  picPathHead='HeadPic/',
                  picPathPet='PetPic/',
-                 picPathVeg='VegPic'):
+                 picPathVeg='VegPic',
+                 inputSize=700,
+                 picSizeLimit=500):
         ##ps: pay attention to the pretrained model path in yml file
         self.resultCode = resultCode
+        self.inputSize=inputSize
+        self.picSizeLimit = picSizeLimit
         ##
         try:
             self.seg = cistyScaperClass(
@@ -66,7 +74,7 @@ class ImgGenerator():
         except Exception as e:
             print(e)
 
-        self.picSizeLimit = 500
+
         # print('ImgGenerator resultCode', resultCode)
 
         try:
@@ -74,45 +82,50 @@ class ImgGenerator():
         except Exception as e:
             print(' pet  module error:', e)
 
-    def process(self, dstPath, alienHeadIndex,  vegetateIndex, alienPetIndex,enviromentIndex):
+    def process(self, dst, alienHeadIndex,  vegetateIndex,enviromentIndex,alienPetIndex):
         img = []
         dic = []
-        print('dstPath path:', dstPath)
-        dst = cv2.imread(dstPath)
+
         if dst is None:
             rcAll = self.resultCode[1]
             print('dst img is none')
         else:
+
+
             print('dst image shape', dst.shape[:2])
             if np.max(dst.shape[:2]) < self.picSizeLimit:
+                ##pic too small
                 rcAll = self.resultCode[2]
-            if alienHeadIndex >= 0 or alienPetIndex >= 0 or enviromentIndex >= 0 or vegetateIndex >= 0:
-                rcSeg, pred = self.seg.run(dst)
-                if list(rcSeg.keys())[0] < 200:
-                    rcAll = self.resultCode[6]
-                else:
-                    ## the total result code of whole process
-                    rcAll = rcSeg
-                    rcHead, img, dicHead = self.alienHeadProcess(alienHeadIndex, dst)
-                    ##
-                    img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcHead)
-                    rcVeg, img, dicVeg = self.vegetateProcess(vegetateIndex, img, pred)
-                    
-                    ##
-                    img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcVeg)
-                    rcPet, img, dicPet = self.alienPetProcess(alienPetIndex, img,pred,self.seg.classNums)
-                    ##
-                    img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcPet)
-                    #print(rcAll,rcPet)
-                    rcEnv, img, dicEnv = self.enviromentProcess(enviromentIndex, img, pred)
-                    ##
-                    dic = [dicHead, dicPet, dicVeg, dicEnv]
             else:
-                ##
-                print('do not ask for generate')
-                rcAll = self.resultCode[4]
-                img = dst
+                if alienHeadIndex >= 0 or alienPetIndex >= 0 or enviromentIndex >= 0 or vegetateIndex >= 0:
+                    dst = minimizeInput(dst,self.inputSize)
+                    rcSeg, pred = self.seg.run(dst)
+                    if list(rcSeg.keys())[0] < 200:
+                        rcAll = self.resultCode[6]
+                    else:
+                        ## the total result code of whole process
+                        rcAll = rcSeg
+                        rcHead, img, dicHead = self.alienHeadProcess(alienHeadIndex, dst)
+                        ##
+                        img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcHead)
+                        rcVeg, img, dicVeg = self.vegetateProcess(vegetateIndex, img, pred)
 
+                        ##
+                        img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcVeg)
+                        #print(rcAll,rcPet)
+                        rcEnv, img, dicEnv = self.enviromentProcess(enviromentIndex, img, pred)
+                        ##
+                        img, dst, rcAll = self.checkLastResult(img, dst, rcAll, rcEnv)
+                        rcPet, img, dicPet = self.alienPetProcess(alienPetIndex, img, pred, self.seg.classNums)
+
+                        ##
+                        dic = [dicHead, dicVeg, dicEnv,dicPet]
+                else:
+                    ##
+                    print('do not ask for generate')
+                    rcAll = self.resultCode[4]
+                    img = dst
+        print('imgGenerate process finish')
         return rcAll, img, dic
 
     def alienPetProcess(self, alienPetIndex, img,pred,classNums):
@@ -183,32 +196,51 @@ class ImgGenerator():
 
         return rc, img, dic
 
-    def run(self, dstPath, alienHeadIndex=-1,vegetateIndex=-1, alienPetIndex=-1,  enviromentIndex=-1):
+    def run(self, dstPath, alienHeadIndex=-1,vegetateIndex=-1, environmentIndex=-1,alienPetIndex=-1):
         try:
-            return self.process(dstPath, alienHeadIndex,  vegetateIndex,alienPetIndex, enviromentIndex)
+            print('dstPath path:', dstPath)
+            dst = cv2.imread(dstPath)
+            return self.process(dst, alienHeadIndex,  vegetateIndex,alienPetIndex, environmentIndex)
         except Exception as e:
             print(e)
+            print('文件', e.__traceback__.tb_frame.f_globals['__file__'])
+            print('行号', e.__traceback__.tb_lineno)
             return self.resultCode[0], [], []
+    def runImg(self, dst, alienHeadIndex=-1,vegetateIndex=-1, environmentIndex=-1,alienPetIndex=-1):
+        try:
+
+            return self.process(dst, alienHeadIndex,  vegetateIndex, environmentIndex,alienPetIndex)
+        except Exception as e:
+            print(e)
+            print('文件', e.__traceback__.tb_frame.f_globals['__file__'])
+            print('行号', e.__traceback__.tb_lineno)
+            return self.resultCode[0], [], []
+
+imgGenerator = ImgGenerator(debug=False,
+                   ymlPathSeg='PetModel/mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml',
+                   modelPathSeg='PetModel/modelCityscape.pdparams',
+                   modelPathSand='msgnet',
+                   picPathHead='HeadPic/',
+                   picPathPet='PetPic/',
+                   picPathVeg='VegPic')
 
 
 if __name__ == '__main__':
 
-    thc = ImgGenerator(debug=False,
-                       ymlPathSeg='PetModel/mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml',
-                       modelPathSeg='PetModel/modelCityscape.pdparams',
-                       modelPathSand='msgnet',
-                       picPathHead='HeadPic/',
-                       picPathPet='PetPic/',
-                       picPathVeg='VegPic')
+
     dstPath = 'testpic/jiayuting.jpg'
     dstPath = 'test/input.jpg'
+
+
+    dstPath = 'testpic/wyf.jpg'
+    rc, img, des = imgGenerator.run(dstPath, alienHeadIndex=0, vegetateIndex=0, environmentIndex=0,  alienPetIndex=0)
     dstPath = 'testpic/test0.jpg'
-    #dstPath = 'testpic/wyf.jpg'
     ## PS!!!: index==-1:do not process, index=0: random choose one, index>0: choose the one id is index
-    rc, img, des = thc.run(dstPath, alienHeadIndex=0, vegetateIndex=0,  alienPetIndex=0,enviromentIndex=0)
+    rc, img, des = imgGenerator.run(dstPath, alienHeadIndex=0, vegetateIndex=0,environmentIndex=0,  alienPetIndex=0)
     # rc={key:value}: key >=200:successs, 100<=key<200: condition not satisfied， key<100:program error
     # img: the return image, may be [] while key <200
-    # dis: the description of the alien
+    # dis: the descriptions of the alien
+
     print('rc=',rc)
     if list(rc.keys())[0] >= 200:
         print(cv2.imwrite('result.jpg', img))

@@ -10,7 +10,7 @@ import os
 import CVTools
 from ConfigHead import config,resultCode
 class TransHeadClass():
-    def __init__(self,debug=False,sideAngleThreshold=15,picPath='HeadPic/',config=config):
+    def __init__(self,debug=False,sideAngleThreshold=12,picPath='HeadPic/',config=config):
         self.debug=debug
         self.sideAngleThreshold=sideAngleThreshold
         self.fl=landmarker(self.debug)
@@ -29,6 +29,8 @@ class TransHeadClass():
             return self.process(dst, charterIndex)
         except Exception as e:
             print('tran headmodule error:',e)
+            print('文件', e.__traceback__.tb_frame.f_globals['__file__'])
+            print('行号', e.__traceback__.tb_lineno)
 
             return self.resultCode[0],dst, {}
         
@@ -104,7 +106,7 @@ class TransHeadClass():
     #
         srcLMHead = srcLM.copy()
         # srcLMHead[:, 0] = srcLMHead[:, 0] - headLeft
-        # print('srcLMHead',srcLMHead)
+        #print('srcLMHead',srcLMHead)
         srcLMHead = np.array(srcLMHead * ratio, 'int64')
         srcLM = np.array(srcLM * ratio, 'int64')
         #
@@ -183,5 +185,5 @@ if __name__=='__main__':
     print(rc)
     if list(rc.keys())[0]==200:
         print(des['name'])
-        print(des['description'])
+        print(des['descriptions'])
         print(cv2.imwrite('test/result.jpg',img))

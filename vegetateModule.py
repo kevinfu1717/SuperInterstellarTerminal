@@ -13,52 +13,58 @@ class vegetateTransClass():
         self.maskIndex=8# cityscape Index of vegetation
         print('self.configDict',self.configDict)
     def run(self,image,vegetateIndex,mask=[],maskRatio=1):
+        return self.process(image,vegetateIndex,mask,maskRatio)
+
+    def process(self,content,vegetateIndex,mask,maskRatio):
         try:
-            return self.process(image,vegetateIndex,mask,maskRatio)
+            vegetateIndex=int(vegetateIndex)
+            dic={}
+            if vegetateIndex==-1:
+                return resultCode[1],content, {}
+            elif vegetateIndex==0:
+                vegetateIndex=random.randint(1,len(self.configDict))
+            path=os.path.join(self.picPath,self.configDict[vegetateIndex]['picPath'])
+            style=cv2.imread(path)[:,:,:3]
+            assert  len(style)>0
+            ratio=self.configDict[vegetateIndex]['mixRatio']
+            assert (ratio>=0 and ratio<=1)
+            style=randomFlip(style)
+            
+            if len(mask)==0:## without mask
+                result=colorTransfer(content, style, ratio=ratio)
+            else:
+                # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN,cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))                                   )
+                mask=np.where(mask==self.maskIndex,1,0)
+                ## has suspect area
+                if np.max(mask)>0:
+                    rowFirst, rowLast = noneZeroIndex(mask, 1)
+                    colFirst, colLast = noneZeroIndex(mask, 0)
+                    result = content.copy()
+                    #print('rowFirst:rowLast,colFirst:colLast',rowFirst,rowLast,colFirst,colLast)
+                    result[rowFirst:rowLast,colFirst:colLast,:]= \
+                        colorTransfer(result[rowFirst:rowLast,colFirst:colLast,:], style, ratio=ratio)
+
+                    result[:,:,0]=np.where(mask==1,result[:,:,0],content[:,:,0])
+                    result[:,:,1]=np.where(mask==1,result[:,:,1],content[:,:,1])
+                    result[:,:,2]=np.where(mask==1,result[:,:,2],content[:,:,2])
+                    print('result',result.shape,np.max(result))
+                    # cv2.imwrite('roiresult.jpg',result)
+
+                    result=cv2.addWeighted(content,1-maskRatio,result,maskRatio,0)
+                    result=np.array(result,'uint8')
+                    rcAll = self.resultCode[4]
+                    dic=self.configDict[vegetateIndex]
+                else:
+                    print('no area match vegetate')
+                    result=content
+                    rcAll=self.resultCode[6]
+
+            return rcAll,result,dic
         except Exception as e:
             print('vegetate error',e)
-            return self.resultCode[0],image, {}
-    def process(self,content,vegetateIndex,mask,maskRatio):
-        vegetateIndex=int(vegetateIndex)
-        dict={}
-        if vegetateIndex==-1:
-            return resultCode[1],content, {}
-        elif vegetateIndex==0:
-            vegetateIndex=random.randint(1,len(self.configDict))
-        path=os.path.join(self.picPath,self.configDict[vegetateIndex]['picPath'])
-        style=cv2.imread(path)[:,:,:3]
-        assert  len(style)>0
-        ratio=self.configDict[vegetateIndex]['mixRatio']
-        assert (ratio>=0 and ratio<=1)
-        style=randomFlip(style)
-        if len(mask)==0:## without mask
-            result=colorTransfer(content, style, ratio=ratio)
-        else:
-            # mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN,cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))                                   )
-            mask=np.where(mask==self.maskIndex,1,0)
-            ## has suspect area
-            if np.max(mask)>0:
-                rowFirst, rowLast = noneZeroIndex(mask, 1)
-                colFirst, colLast = noneZeroIndex(mask, 0)
-                result = content.copy()
-                result[rowFirst:rowLast,colFirst:colLast,:]= \
-                    colorTransfer(result[rowFirst:rowLast,colFirst:colLast,:], style, ratio=ratio)
-
-                result[:,:,0]=np.where(mask==1,result[:,:,0],content[:,:,0])
-                result[:,:,1]=np.where(mask==1,result[:,:,1],content[:,:,1])
-                result[:,:,2]=np.where(mask==1,result[:,:,2],content[:,:,2])
-                # cv2.imwrite('roiresult.jpg',result)
-
-                result=cv2.addWeighted(content,1-maskRatio,result,maskRatio,0)
-                result=np.array(result,'uint8')
-                rcAll = self.resultCode[4]
-                dict=self.configDict[vegetateIndex]
-            else:
-                print('no area match vegetate')
-                result=content
-                rcAll=self.resultCode[6]
-
-        return rcAll,result,dict
+            print('文件', e.__traceback__.tb_frame.f_globals['__file__'])
+            print('行号', e.__traceback__.tb_lineno)
+            return self.resultCode[0],content, {}
 def noneZeroIndex(array_2D,axis):
     # array_2D = np.array(
     #     [[0, 0, 2, 3, 0, 4], [0, 0, 0, 0, 0, 0], [1, 0, 2, 3, 4, 0], [1, 0, 2, 3, 4, 9], [0, 0, 0, 0, 0, 0]])
@@ -75,13 +81,12 @@ def randomFlip(src):
     return src
 def colorTransfer(content,style,ratio=0.5):
     if content.shape[0]>content.shape[1]:
-        scaleRatio=content.shape[0]/style.shape[0]
+        scaleRatio=content.shape[0]/min(style.shape[:2])
     else:
-        scaleRatio=content.shape[1]/style.shape[1]
+        scaleRatio=content.shape[1]/min(style.shape[:2])
     #
-
     style=cv2.resize(style[:,:,:3],None,fx=scaleRatio,fy=scaleRatio)
-    print(style.shape,content.shape)
+    print('style.shape,content.shape',style.shape,content.shape)
     style=style[:content.shape[0],:content.shape[1],:]
     assert style.shape==content.shape
     yuv = cv2.cvtColor(np.float32(style), cv2.COLOR_BGR2YUV)
@@ -106,5 +111,5 @@ if __name__=='__main__':
     print(rc)
     if list(rc.keys())[0] >= 200:
         print(des['name'])
-        print(des['description'])
+        print(des['descriptions'])
         cv2.imwrite( "combine.jpg", img)

@@ -8,7 +8,7 @@ import paddle
 import random
 # from CityscapesModule import cistyScaperClass
 from ConfigPet import config as configAlienPet
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 paddle.disable_static()
 try:
     from ConfigPet import resultCode
@@ -73,96 +73,99 @@ class alienPetClass():
         #
         #rc,pred=self.seg.run(image)
         # print(list(rc.keys())[0],'begin add pet',alienIndex)
+        try:
+            classOkArea=self.checkClassArea(pred,classNums)
+            #print('classOkArea',list(classOkArea.keys()))
+            alienIndex,areaIndex=self.chooseCheckAlien(alienIndex,classOkArea)
+            print('alienIndex,areaIndex',alienIndex,areaIndex)
+            if alienIndex>0:
+                print('alienIndex:',self.alienDict[alienIndex])
+                print('read pic:',os.path.join(self.petPicPath,self.alienDict[alienIndex]['picPath']))
+                src=cv2.imread(os.path.join(self.petPicPath,self.alienDict[alienIndex]['picPath']))
+                ## random flip
+                src=randomFlip(src)
+                scaleRatio=float(self.alienDict[alienIndex]['scaleRatio'])
+                assert len(src.shape)>2
+                assert scaleRatio>0
+                assert scaleRatio<1
+                # which seamlessclone method to use
+                mixclone=self.alienDict[alienIndex]['mixTimes']
 
-        classOkArea=self.checkClassArea(pred,classNums)
-        #print('classOkArea',list(classOkArea.keys()))
-        alienIndex,areaIndex=self.chooseCheckAlien(alienIndex,classOkArea)
-        print('alienIndex,areaIndex',alienIndex,areaIndex)
-        if alienIndex>0:
-            print('alienIndex:',self.alienDict[alienIndex])
-            print('read pic:',os.path.join(self.petPicPath,self.alienDict[alienIndex]['picPath']))
-            src=cv2.imread(os.path.join(self.petPicPath,self.alienDict[alienIndex]['picPath']))
-            ## random flip
-            src=randomFlip(src)
-            scaleRatio=float(self.alienDict[alienIndex]['scaleRatio'])
-            assert len(src.shape)>2
-            assert scaleRatio>0
-            assert scaleRatio<1
-            # which seamlessclone method to use
-            mixclone=self.alienDict[alienIndex]['mixTimes']
+                # adjust the size of src(alien) depend on the user`s image
+                if src.shape[0]<src.shape[1]:
 
-            # adjust the size of src(alien) depend on the user`s image
-            if src.shape[0]<src.shape[1]:
-
-                srcRatio=min(image.shape[:2])*scaleRatio/src.shape[0]
-            else:
-                srcRatio=min(image.shape[:2])*scaleRatio/src.shape[1]
-            ##
-            srcRatio*=random.uniform(0.8, 1)
-            ##
-            src=cv2.resize(src,None,fx=srcRatio,fy=srcRatio)
-            print('mix_clone =',mixclone,'src newsize',src.shape)
-            dilateRatio=0.1
-            if mixclone==1:
-                dilateRatio+=0.1
-            #
-            leftTop=cloneLeftTop(pred,src,areaIndex,dilateRatio)
-
-            #
-            if len(leftTop)>0:
-                print('leftTop',leftTop)
+                    srcRatio=min(image.shape[:2])*scaleRatio/src.shape[0]
+                else:
+                    srcRatio=min(image.shape[:2])*scaleRatio/src.shape[1]
+                ##
+                srcRatio*=random.uniform(0.8, 1)
+                ##
+                src=cv2.resize(src,None,fx=srcRatio,fy=srcRatio)
+                print('mix_clone =',mixclone,'src newsize',src.shape)
+                dilateRatio=0.1
+                if mixclone==1:
+                    dilateRatio+=0.1
                 #
-                if mixclone>0:
-                    maskSrc=255*np.ones(src.shape,src.dtype)
-                else:
-                    maskSrc=maskOfWhiteBG(src,threshold=240)
-                #maskSrc=255*np.ones(src.shape,src.dtype)
-                print('maskSrc',maskSrc.shape)
-                src,maskSrc,leftTop,rightdown,x1,x2,y1,y2=roiAreaCheck(src,maskSrc,image,leftTop)
+                leftTop=cloneLeftTop(pred,src,areaIndex,dilateRatio)
 
-                center=leftTop2Center(leftTop,src)
-                if self.debug:
-                    cv2.imwrite('src.jpg',src)
-                    cv2.imwrite('maskSrc.jpg',maskSrc)
-                print('center',center,'maskSrc',maskSrc.shape)
+                #
+                if len(leftTop)>0:
+                    print('leftTop',leftTop)
+                    #
+                    if mixclone>0:
+                        maskSrc=255*np.ones(src.shape,src.dtype)
+                    else:
+                        maskSrc=maskOfWhiteBG(src,threshold=240)
+                    #maskSrc=255*np.ones(src.shape,src.dtype)
+                    print('maskSrc',maskSrc.shape)
+                    src,maskSrc,leftTop,rightdown,x1,x2,y1,y2=roiAreaCheck(src,maskSrc,image,leftTop)
 
-                #print(src.dtype,image.dtype,maskSrc.dtype)
-                if mixclone>0:
+                    center=leftTop2Center(leftTop,src)
+                    if self.debug:
+                        cv2.imwrite('src.jpg',src)
+                        cv2.imwrite('maskSrc.jpg',maskSrc)
+                    print('center',center,'maskSrc',maskSrc.shape)
 
-                    #combine=cv2.seamlessClone(maskSrc,image,maskSrc,center,cv2.NORMAL_CLONE)
-                    combine=cv2.seamlessClone(src,image,maskSrc,center,cv2.MIXED_CLONE)
+                    #print(src.dtype,image.dtype,maskSrc.dtype)
+                    if mixclone>0:
 
-                else:
+                        #combine=cv2.seamlessClone(maskSrc,image,maskSrc,center,cv2.NORMAL_CLONE)
+                        combine=cv2.seamlessClone(src,image,maskSrc,center,cv2.MIXED_CLONE)
 
-                    combine=cv2.seamlessClone(src,image,maskSrc,center,cv2.NORMAL_CLONE)
+                    else:
+
+                        combine=cv2.seamlessClone(src,image,maskSrc,center,cv2.NORMAL_CLONE)
 
 
-                if self.debug:
-                    cv2.imwrite('combine.jpg',combine)
-                    cv2.imwrite('mask'+str(areaIndex)+'.jpg',np.where(pred==areaIndex,255,0))
-                if self.alienDict[alienIndex]['mask']==1:
-                    print('combine',combine.shape,image.shape)
-                    combine[:,:,0]=np.where(pred==areaIndex,combine[:,:,0],image[:,:,0])
-                    combine[:,:,1]=np.where(pred==areaIndex,combine[:,:,1],image[:,:,1])
-                    combine[:,:,2]=np.where(pred==areaIndex,combine[:,:,2],image[:,:,2])
+                    if self.debug:
+                        cv2.imwrite('combine.jpg',combine)
+                        cv2.imwrite('mask'+str(areaIndex)+'.jpg',np.where(pred==areaIndex,255,0))
+                    if self.alienDict[alienIndex]['mask']==1:
+                        print('combine',combine.shape,image.shape)
+                        combine[:,:,0]=np.where(pred==areaIndex,combine[:,:,0],image[:,:,0])
+                        combine[:,:,1]=np.where(pred==areaIndex,combine[:,:,1],image[:,:,1])
+                        combine[:,:,2]=np.where(pred==areaIndex,combine[:,:,2],image[:,:,2])
 
-                return self.resultCode[4],combine,self.alienDict[alienIndex]
+                    return self.resultCode[4],combine,self.alienDict[alienIndex]
 
-        return self.resultCode[8],image,{}
+            return self.resultCode[8],image,{}
+        except Exception as e:
+            print('alien pet module error:',e)
+            print('文件', e.__traceback__.tb_frame.f_globals['__file__'])
+            print('行号', e.__traceback__.tb_lineno)
+        
+            return self.resultCode[0],image,{}
             
     def run(self,image,classMask,classNums,alienIndex=0):      #index=0 is random
         image=np.array(image,'uint8')
         if alienIndex<0 or alienIndex>len(self.alienDict):
             print('alienIndex not correct',alienIndex)
             return self.resultCode[5],image,{}
-        try:
-            return self.process(image,classMask,classNums, alienIndex)
-        except Exception as e:
-            print('alien pet module error:',e)
         
-        return self.resultCode[0],image,{}
+        return self.process(image,classMask,classNums, alienIndex)
+
 def leftTop2Center(leftTop,src):
-    center=(round (leftTop[0]+src.shape[1]/2),round(leftTop[1]+src.shape[0]/2))
+    center=(int(round(leftTop[0]+src.shape[1]/2)),int(round(leftTop[1]+src.shape[0]/2)))
 
     return center
 def randomFlip(src):
@@ -299,7 +302,7 @@ if __name__=='__main__':
     if list(rc.keys())[0]>=200:
 
         print(des['name'])
-        print(des['description'])
+        print(des['descriptions'])
         cv2.imwrite( "combine.jpg", img)
 
 
