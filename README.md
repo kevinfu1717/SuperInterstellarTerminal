@@ -1,6 +1,7 @@
 # 星际终端 Super Interstellar Terminal
 超级星际终端——A Wechat Social Game with AR and LBS
 
+
    - **A. 项目介绍**
    
 		整体项目简述
@@ -15,7 +16,7 @@
 
    - **D. 上手及部署**
 
-		快速上手，你也可以建立一个轻社交，结合增强现实技术（AR）与位置服务（LBS）的微信小游戏
+		快速建立一个轻社交，结合增强现实技术（AR）与位置服务（LBS）的微信聊天小游戏，也可以把外星世界生成器用在别的地方！
 
    - **E. 总结**
 
@@ -25,12 +26,20 @@
 ### A1. 一句话概述：
 
 
-   - 结合Wechaty与PadddlePaddle的各种AI能力，建立一个基于微信的 **轻社交，结合增强现实技术（AR）+LBS(暂时只基于图像）的星际漂流瓶游戏**。
+   - 结合Wechaty与PadddlePaddle的各种AI能力，建立一个基于 微信聊天的 **轻社交，结合增强现实技术（AR）+LBS(暂时只基于图像）的星际漂流瓶游戏。** 重新认识你身边的世界，其实早已与外星生命共存。
      
    - **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先star或Fork跟踪更新进度**
+   
+      github地址：[https://github.com/kevinfu1717/SuperInterstellarTerminal](https://github.com/kevinfu1717/SuperInterstellarTerminal)
+      
+  - 样例视频如下：（建议全屏观看）
+
+<iframe src="//player.bilibili.com/player.html?aid=462169363&bvid=BV1hL411E79M&cid=383920760&page=1" scrolling="yes" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="600px" height="600px"> </iframe>
 
 
-### A2. 你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中
+### A2. 太空漂流信息
+
+—— **你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中**
 
    - 嗨，别来无恙啊，此刻的你是否有些孤独，别怕，此时此刻，在浩瀚宇宙中，总有与你相似的灵魂，你们或许来自不同的星球，有着不同的文明，但你们仍然可以通过太空漂流瓶去表达内心的情感，快来开启你的太空漂流瓶之旅吧......
 
@@ -38,9 +47,12 @@
 
    - 甚至，在一个你意想不到的时刻会收到想象之外的漂流瓶信息。发送与接收漂流瓶都可以提升等级噢！
 
-![](https://ai-studio-static-online.cdn.bcebos.com/255a83cbbe5d4a189f2cf24f9a1bb0a56625d6f67d3047ab947939a323b7a1d1)
 
-### A3. 接收漂流瓶任务，结合增强现实技术（AR）+位置服务（LBS）的游戏
+                              
+
+### A3. 增强现实技术（AR）+位置服务（LBS）的游戏
+
+—— **接收漂流瓶任务，寻找身边潜藏的外星人、外星生物（宠物）、外星植物、外星建筑**
 
    - 基于微信聊天中的图片及文本聊天。通过文本接受到任务或主动触发。
    
@@ -95,9 +107,9 @@
 
 ### C. 模型
 
- - 训练文件： 见项目中 Train压缩包下 TrainAlienPet.ipynb	
+ - 训练文件： 见项目中 Train压缩包下 **TrainAlienPet.ipynb**	
  
- - 模型文件： 见项目中 Train压缩包下 generator0725.params	
+ - 模型文件： 见项目中 Train压缩包下 **generator0725.params**	
  
  - 搜索了一下GAN的模型，结合可训练性与生成效果，选择了LSGAN。基于项目aistudio上“独楼望天涯”大佬的项目 [https://aistudio.baidu.com/aistudio/projectdetail/1936908?channelType=0&channel=0](http://) 进行修改。
  
@@ -434,23 +446,74 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 | 2  |   图像迁移     |  把建筑转成灰度图，然后用msgnet迁移成流沙的风格.  |
 
 
-## 7. 建立Alien Server
+## 7. 使用ImgGenerateModule 建立Alien Server或直接调用
 
-不确定什么原因，以前wechaty都可以在AIstudio的脚本任务跑，现在好像不可以了，从AIstudio脚本任务无法访问外网的端口了，可以ping通外网。所以，需要另外找自己的主机作深度学习这部分的图片推理生成，因此直接把上述功能再弄到flask中，弄了个接口。
+### 7.1 直接调用函数
 
-   - 接口代码见：
+	## ImgGenerateModule可以单独使用或 app.py也可单独建立flask的图像生成服务供其他用途使用
+ 
+ - 1. 初始化函数定义各个模型文件夹及图片素材的位置
 
- 项目中的app.py脚本
+```
+ imgGenerator = ImgGenerator(debug=False,
+ 	    ymlPathSeg='PetModel/mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml',#cityscapes分割模型的yml
+ 	    modelPathSeg='PetModel/modelCityscape.pdparams',#cityscapes分割模型文件
+ 	    modelPathSand='msgnet',#沙画模型文件夹
+ 	    picPathHead='HeadPic/',#外星人头素材
+ 	    picPathPet='PetPic/',#外星生物素材
+ 	    picPathVeg='VegPic')#外星植物及外星建筑素材
+                   
+```
+ - 2. 调用函数生成
+ 
+ 输入是图片路径：
+ 
+	 rc, img, des = imgGenerator.run(dstPath, alienHeadIndex=0, vegetateIndex=0,environmentIndex=0,  alienPetIndex=0)
+ 
+ 输入直接是图片：
+ 
+	 rc, img, des = imgGenerator.runImg(img, alienHeadIndex=0, vegetateIndex=0,environmentIndex=0,  alienPetIndex=0)
+  
+ - 3. 参数说明
+ 
+ |参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|img/dstPath |是  |string |待处理图片或待处理图片的地址   |
+|alienHeadIndex |否  |int | 是否进行换外星人头，-1为不处理，0为随机，>0为指定index为该值的外星人    |
+|vegetateIndex     |否  |int | 	是否添加外星植物，-1为不处理，0为随机，>0为指定index为该值的外星植物    |
+|environmentIndex |否  |int | 	是否生成外星建筑外墙，-1为不处理，>0为生成    |
+|alienPetIndex     |否  |int | 	是否进行添加外星生物，-1为不处理，0为随机，>0为指定index为该值的外星生物   |
+   
+ - 4. 返回说明
+ 
+|参数名|类型|说明|
+|:-----  |:---|-----  |
+|result_code |dict|{ 返回结果代号 ：返回结果描述}，result_code参数具体见代码中说明，200为正常生成 |
+|img |numpy array|生成的图片或原图片(没有适合的位置生成时返回原图片) |
+|dis |dict|，包含生成外星人/生成外星植物/生成外星建筑/生成外星宠物的参数的字典. 没有进行处理则为空字典 |
+ 
 
-   - 接口文档说明见showdoc：
+### 7.2 建server，访问图像生成接口 (本项目中使用的方式）
+ 
+  不确定什么原因，以前wechaty都可以在AIstudio的脚本任务跑，现在好像不可以了，从AIstudio脚本任务无法访问外网的端口了，可以ping通外网。所以，需要另外找自己的主机作深度学习这部分的图片推理生成，因此直接把上述功能再弄到flask中，弄了个接口。
+
+- 1.接口代码见：
+
+      项目中的app.py脚本
+
+- 2. 接口文档说明见showdoc：
 
 [https://www.showdoc.com.cn/1525661816374166/7370335053618085](https://www.showdoc.com.cn/1525661816374166/7370335053618085)
+
+             
+ 
 
 # D.上手及部署指南
 
 ## D1. 配置要求
 
-图像部分，因为用了PaddleSeg需要一台6G显存以上的主机
+图像部分，因为用了PaddleSeg需要一台6G显存以上的主机，4G显存的没测试过，可以尝试调小 ImgGeneratorModule 中的 inputSize, 在DL处理前先缩小图片。
+
 
 ## D2. 部署方案
 
@@ -460,7 +523,48 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
  - 方案二：一台普通云端服务器（1核2G之类的）+ 一台有外网IP的显存6G，内存16G电脑(部署图像部分：ImgGenerateModule)
  - 方案三：一台有GPU的云端服务器
  
+
  
+
+
+## D3. 模型下载
+
+需下载以下模型：
+
+ - 简化后的PadlleSeg的cityscapes的SOTA模型:
+ 
+   （CityscapesModule.py需要）
+ 
+   AIstudio数据页：[https://aistudio.baidu.com/aistudio/datasetdetail/102892](https://aistudio.baidu.com/aistudio/datasetdetail/102892)
+ 
+ 
+ - 流沙效果/沙画效果模型:
+ 
+   （sandModule.py需要）
+ 
+   AIstudio数据页：[https://aistudio.baidu.com/aistudio/datasetdetail/102698](https://aistudio.baidu.com/aistudio/datasetdetail/102698)
+
+- PaddleSeg:
+
+  （CityscapesModule.py需要）
+
+   AIstudio数据页：[https://aistudio.baidu.com/aistudio/datasetdetail/102136](https://aistudio.baidu.com/aistudio/datasetdetail/102136)
+ 
+  或直接去github： git clone https://github.com/PaddlePaddle/PaddleSeg   
+ 
+  或者去gitee： git clone https://gitee.com/PaddlePaddle/PaddleSeg  
+
+ 
+ - 生成外星人矢量图模型
+ 
+   ( 非必需，若要自己新增生成外星生物才需要）：
+ 
+   AIstudio数据页：[https://aistudio.baidu.com/aistudio/datasetdetail/103316](https://aistudio.baidu.com/aistudio/datasetdetail/103316)
+ 
+
+
+## D4. 部署过程
+
  
 
 1. 申请Wechaty Token [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://wechaty.js.org) [![Wechaty in Python](https://img.shields.io/badge/Wechaty-Python-blue)](https://github.com/wechaty/python-wechaty)
@@ -585,9 +689,16 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 感谢百度爸爸的算力及技术支持
 
+感谢Wechaty与Mixlabs
+
 感谢Reference中列到的所有作者
 
 感谢其中用到的所有开源项目的作者及维护者
+
+感谢Teammate细菌，感谢过程中所有提供鼓励与帮助的百度人员
+
+致敬为拓展人类的宇宙梦而奋斗的所有技术工作者 Respect！!!
+
 
 
 
