@@ -34,7 +34,7 @@
       
   - 样例视频如下：（建议全屏观看）
 
-<iframe src="//player.bilibili.com/player.html?aid=462169363&bvid=BV1hL411E79M&cid=383920760&page=1" scrolling="yes" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="600px" height="600px"> </iframe>
+[![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https:///player.bilibili.com/player.html?aid=462169363&bvid=BV1hL411E79M&cid=383920760&page=1)
 
 
 ### A2. 太空漂流信息
