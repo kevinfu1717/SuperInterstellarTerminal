@@ -32,7 +32,7 @@
    
       aistudio地址：[https://aistudio.baidu.com/aistudio/projectdetail/2230251)
       
-  - 样例视频如下：（建议全屏观看）
+  - B站样例视频如下：（建议全屏观看）
 
 
 [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
