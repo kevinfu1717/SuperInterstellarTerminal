@@ -30,12 +30,12 @@
      
    - **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先star或Fork跟踪更新进度**
    
-      github地址：[https://github.com/kevinfu1717/SuperInterstellarTerminal](https://github.com/kevinfu1717/SuperInterstellarTerminal)
+      aistudio地址：[https://aistudio.baidu.com/aistudio/projectdetail/2230251)
       
   - 样例视频如下：（建议全屏观看）
 
-[![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https:///player.bilibili.com/player.html?aid=462169363&bvid=BV1hL411E79M&cid=383920760&page=1)
 
+[![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
 
 ### A2. 太空漂流信息
 
@@ -133,8 +133,17 @@
 
 ### D. 后处理
 
-1. 为外星生物配上背景介绍，定义他们出现的位置，为后面AR叠加提供素材
-2. 在叠加到现实图像中做AR效果时，使用cv处理优化这部分（具体见3-d中的描述）
+
+—— 1. 在叠加到现实图像中做AR效果时，使用cv处理优化这部分（具体见3-d中的描述）
+
+—— 2. 为外星生物配上背景介绍，定义他们出现的位置，建立外星生物图鉴
+
+ - **外星生物图鉴：**
+
+
+<img src="https://ai-studio-static-online.cdn.bcebos.com/2628476cfe6e4e20b20cfc01994e0065d6abce5bf1e541eb942fb2e07ebc181d" width="550px" />
+
+
 
 ## 2. 外星人显形  —— alienHeadModule.py
 
@@ -241,7 +250,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 ( **PS:注意真实返回的ID是从0开始的，所以是trainId-1**,如sky实际返回的id是10 not 11）：
 
-<img src="https://ai-studio-static-online.cdn.bcebos.com/cff349c273434fbd8b09b3df68afdea72b720add38a246ecab3be84c9c3f8f69" width="600px" />
+<img src="https://ai-studio-static-online.cdn.bcebos.com/cff349c273434fbd8b09b3df68afdea72b720add38a246ecab3be84c9c3f8f69" width="750px" />
 
 
 ### d.  使用
@@ -249,7 +258,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
  - 运行CityscapesModule.py脚本,设好要处理图片的路径，将返回大小于原图片大小一样的二维数组pred，其取值是从0~18。
  
-  - 可以拿这个二维数组作为mask，例如用np.where(mask == index ,1,0)来截取自己感兴趣的区域，index取值为c 中的 trainID -1。 
+  - 可以拿这个二维数组作为mask，例如用np.where(mask == index ,1,0)来截取自己感兴趣的区域，index取值为上面c.表格中的 trainID -1。 
   
   - CityscapesModule.py中把pred ×10后保存成图片，图片像素的灰度值从0~180,见右下图。
 
@@ -323,7 +332,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 
 
-#### d2. 结合mask的优化版seamlesClone图像合成效果—— maskOfWhiteBG() ，roiAreaCheck（）
+#### d2. 结合mask的优化版seamlesClone图像合成效果—— 代码见alienPetModule.py中的maskOfWhiteBG() ，roiAreaCheck（）
 
 
 | 步骤 | 步骤 | 说明 | 备注 |
@@ -335,7 +344,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 
 
-#### d3. 结合cityScapes分割的AR定位——erode2LeftTop（），leftTop2Center()
+#### d3. 结合cityScapes分割的AR定位——代码见alienPetModule.py中的erode2LeftTop（），leftTop2Center()
 
 
 | 步骤 | 步骤 | 说明 | 备注 |
@@ -370,7 +379,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 ### a.  准备
 
-找了一些外星植物的图片，准备尝试实现非深度学习的颜色纹理迁移
+找了一些外星植物的图片，实现非深度学习的基于**图像技术**的颜色纹理迁移
 
 
 ### b 作用
@@ -404,15 +413,15 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
    - 我们也可以通过Y通道融合亮度，保留外星的U,V通道，即保留其颜色。当两个图片融合时，通过调节融合的Y通道的权重，控制合成出来的颜色亮度。
 
 ```
-	##把图片style，content转到yuv空间
+##把图片style，content转到yuv空间
     yuv = cv2.cvtColor(np.float32(style), cv2.COLOR_BGR2YUV)
     y, u, v = cv2.split(yuv)
     yuv2 = cv2.cvtColor(np.float32(content), cv2.COLOR_BGR2YUV)
     h, j, k = cv2.split(yuv2)
-	## 根据ratio这个比例来合成 style 与 content两张图
+## 根据ratio这个比例来合成 style 与 content两张图
     hy=np.array((h*ratio+y*(1-ratio)),'uint8')
     #hy=np.clip(hy,0,255)
-   ## 两张图进行合成
+  ## 两张图进行合成
     content = np.dstack((hy,u,v))
     content = cv2.cvtColor(np.float32(content), cv2.COLOR_YUV2BGR)
 ```
@@ -430,7 +439,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 ### a.  准备
 
 
-使用Msgnet迁移训练的沙画模型，实现基于深度学习的风格迁移。 大家可以对比一下4中的基于CV技术的迁移
+使用Msgnet迁移训练的沙画模型，实现基于**深度学习**的风格迁移。 大家可以对比一下5中的外星植物的效果，那是基于CV技术的迁移
 
 
 ### b 作用
@@ -506,6 +515,50 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 [https://www.showdoc.com.cn/1525661816374166/7370335053618085](https://www.showdoc.com.cn/1525661816374166/7370335053618085)
 
              
+ 
+
+# 8 识别图像的拍摄位置
+
+## 8.1 前提条件（需同时满足下面条件）
+ - 用户是在微信中，用**原图**发送照片给我们
+  - 照片拍照时，其拍照设置中打开了**保存地理位置信息** 
+  
+
+## 8.2 背景情况介绍
+
+ - 若用户满足上述2条件，则保存的照片里将含有exif信息。该EXIF信息，可在Windows中图片的属性中看到，GPS，拍照日期等信息：
+  
+<img src="https://ai-studio-static-online.cdn.bcebos.com/e93878056a6b41fbbe4889a7246128ae772d752115a64666ab1e857437a2cfbe" width="700px" />
+
+ 
+  - EXIF的详细介绍可见，这里不详细叙述了： 
+  
+  [http://www.360doc.com/content/18/0303/07/7793103_733844932.shtml](http://www.360doc.com/content/18/0303/07/7793103_733844932.shtml)
+ 
+ 
+## 8.3 获取经纬度—— exifModule.py
+
+ - python中有pip库可以直接获取照片的exif信息， 具体代码可见项目工程中的exifModule.py.
+  - 本脚本中提取了最关键的经度与纬度信息，还有拍照日期可供调用
+  
+  
+## 8.3 获取具体位置—— geoModule.py
+
+ - 具体代码可见项目工程中的geoModule.py.
+  - 步骤：把获得的经纬度信息去请求开放的地图api，获取具体地址.这个方法的名称为：逆地址编码
+  - 横向比较了： 百度，腾讯，高德地图，发现高德给出的个人免费调用量有 3W/日，其他两家只有几k。最终选用了高德的api
+ - 高德api获取地址步骤（非常简单）：
+ 
+| 序号 | 高德流程 | 备注|
+| -------- | -------- | -------- |
+| 1    | 注册     | 需要支付宝扫码实名     |
+| 2    | 新建应用     | 按默认点确定即可     |
+| 3    | 复制那个应用的key进行调用     | 调用代码见geoModule.py,请使用自己的gaode_key测试    |
+
+详细图文描述可见：
+[https://zhuanlan.zhihu.com/p/371682461](https://zhuanlan.zhihu.com/p/371682461)
+
+
  
 
 # D.上手及部署指南
@@ -698,6 +751,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 感谢Teammate细菌，感谢过程中所有提供鼓励与帮助的百度人员
 
 致敬为拓展人类的宇宙梦而奋斗的所有技术工作者 Respect！!!
+
 
 
 
