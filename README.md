@@ -1,4 +1,4 @@
-# 星际终端 Super Interstellar Terminal
+# 星际终端 Super Interstellar Terminal (A Wechat Social Game with AR and LBS)
 超级星际终端——A Wechat Social Game with AR and LBS
 
 
