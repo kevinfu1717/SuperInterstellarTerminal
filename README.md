@@ -37,6 +37,15 @@
 
 [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
 
+
+      
+
+
+   - **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先star或Fork跟踪更新进度**
+   
+      github地址：[https://github.com/kevinfu1717/SuperInterstellarTerminal](https://github.com/kevinfu1717/SuperInterstellarTerminal)
+      
+
 ### A2. 太空漂流信息
 
 —— **你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中**
@@ -62,6 +71,10 @@
 
    
    - **更多的剧本、玩法， 请各位github或aistuido留言，让我们一起创造！记得要先点收藏（star）或 fork，持续关注更新**
+   
+   - **扫码加群，按群公告操作即可体验**
+   <img src="https://ai-studio-static-online.cdn.bcebos.com/70b5ca52aa3f4253b9321d1435dccb62e4601a179fec459ea42d10632ad890ec" width="150px" /> 
+   
 
 
 
@@ -514,7 +527,9 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 [https://www.showdoc.com.cn/1525661816374166/7370335053618085](https://www.showdoc.com.cn/1525661816374166/7370335053618085)
 
-             
+- 3. 并发问题:
+
+flask接口默认允许并发，即可能很短时间内或同一时间调用里面的函数的，但鉴于我们的运算都是GPU的，不支持并发调用。所以，使用了gevent来设置阻塞的服务。即会一个处理完再调用处理下一个，中间还没处理的会等待。
  
 
 # 8 识别图像的拍摄位置
@@ -751,6 +766,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 感谢Teammate细菌，感谢过程中所有提供鼓励与帮助的百度人员
 
 致敬为拓展人类的宇宙梦而奋斗的所有技术工作者 Respect！!!
+
 
 
 
