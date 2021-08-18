@@ -1,0 +1,8 @@
+oss2
+numpy
+wechaty
+PyMySQL
+transitions
+prettytable >= 2.1.0
+apscheduler
+opencv-python
