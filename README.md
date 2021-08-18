@@ -707,5 +707,5 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 - 感谢Wechaty与Mixlabs
 - 感谢Reference中列到的所有作者
 - 感谢其中用到的所有开源项目的作者及维护者
-- 感谢Teammate细菌，感谢过程中所有提供鼓励与帮助的百度人员
+- 感谢Teammate[@Lovely-Pig](https://github.com/Lovely-Pig)，感谢过程中所有提供鼓励与帮助的百度人员
 - 致敬为拓展人类的宇宙梦而奋斗的所有技术工作者 Respect！!!
