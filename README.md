@@ -26,7 +26,7 @@
 
 - 结合Wechaty与PadddlePaddle的各种AI能力，建立一个基于 微信聊天的 **轻社交，结合增强现实技术（AR）+LBS(暂时只基于图像）的星际漂流瓶游戏。** 重新认识你身边的世界，其实早已与外星生命共存。
   
-- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先Star或Fork跟踪更新进度**
+- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先Star和Fork跟踪更新进度**
 
   AI Studio地址：<https://aistudio.baidu.com/aistudio/projectdetail/2230251>
   
@@ -175,8 +175,7 @@ landmark的68个人脸关键点模型具体介绍请见官方介绍：<https://g
 
 #### d.2 单方向渐变遮罩
 
-使用从上到下的遮罩，可以有效渐变过度到身体。上到下的渐变mask生成见`CVTools.py`中的gradientMask()。只用上到下的渐变
-是因为外星人头会比正常人头大，本身过渡要求不高，所以上，左，右方向的融合过渡，依靠seamlessClone则可较好处理。剩下 下 这个方向是连接颈部或身体的需要渐变遮罩过渡。（见下图）
+使用从上到下的遮罩，可以有效渐变过度到身体。上到下的渐变mask生成见`CVTools.py`中的gradientMask()。只用上到下的渐变，是因为外星人头会比正常人头大，本身过渡要求不高，所以上，左，右方向的融合过渡，依靠seamlessClone则可较好处理。剩下 下 这个方向是连接颈部或身体的需要渐变遮罩过渡。（见下图）
 
 <img src="https://ai-studio-static-online.cdn.bcebos.com/6d784169f2004c948847bb0a76a7a2b4ea094635d1f14f6ca444760ee54cb544" width="120px" />
 
@@ -287,7 +286,7 @@ cv2.seamlessClone(src, dst, src_mask, center, cv2.MIXED_CLONE)
 cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER)
 ```
 
-借用别人的图，懒得生成了,左中右分别是：`NORMAL_CLONE`，`MIXED_CLONE`，`MONOCHROME_TRANSFER`：
+借用别人的图，懒得生成了，左中右分别是：`NORMAL_CLONE`，`MIXED_CLONE`，`MONOCHROME_TRANSFER`：
 
 **简单背景：**
 
@@ -372,11 +371,11 @@ cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER)
   h, j, k = cv2.split(yuv2)
   
   # 根据ratio这个比例来合成 style 与 content两张图
-  hy=np.array((h * ratio + y * (1 - ratio)), 'uint8')
-  # hy=np.clip(hy,0,255)
+  hy = np.array((h * ratio + y * (1 - ratio)), 'uint8')
+  # hy = np.clip(hy, 0, 255)
   
   # 两张图进行合成
-  content = np.dstack((hy,u,v))
+  content = np.dstack((hy, u, v))
   content = cv2.cvtColor(np.float32(content), cv2.COLOR_YUV2BGR)
   ```
 
@@ -465,7 +464,7 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 
 ### b. 建server，访问图像生成接口 (本项目中使用的方式）
 
-不确定什么原因，以前wechaty都可以在AI Studio的脚本任务跑，现在好像不可以了，从AI Studio脚本任务无法访问外网的端口了，可以ping通外网。所以，需要另外找自己的主机作深度学习这部分的图片推理生成，因此直接把上述功能再弄到flask中，弄了个接口。
+不确定什么原因，以前Wechaty都可以在AI Studio的脚本任务跑，现在好像不可以了，从AI Studio脚本任务无法访问外网的端口了，可以ping通外网。所以，需要另外找自己的主机作深度学习这部分的图片推理生成，因此直接把上述功能再弄到flask中，弄了个接口。
 
 - 接口代码见：项目中的`app.py`脚本
 
@@ -486,7 +485,6 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 - 若用户满足上述2条件，则保存的照片里将含有exif信息。该EXIF信息，可在Windows中图片的属性中看到，GPS，拍照日期等信息：
 
   <img src="https://ai-studio-static-online.cdn.bcebos.com/e93878056a6b41fbbe4889a7246128ae772d752115a64666ab1e857437a2cfbe" width="700px" />
-
 
 - EXIF的详细介绍可见，这里不详细叙述了： 
 
