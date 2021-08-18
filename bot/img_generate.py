@@ -1,9 +1,29 @@
 import os
+import cv2
 import json
-import CVTools
+import base64
 import requests
+import numpy as np
 
 from typing import Dict, List, Optional
+
+
+def img2base64(img_path):
+    img_file = open(img_path, 'rb')
+    img_b64encode = base64.b64encode(img_file.read())
+
+    return img_b64encode.decode('utf8')
+
+
+def base64cv(img_raw_base64):
+    # base64解码
+    img_b64decode = base64.b64decode(img_raw_base64.encode('utf8'))
+    # 转换np序列
+    img_array = np.fromstring(img_b64decode, np.uint8)
+    # 转换Opencv格式 BGR
+    img_opencv = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+    return img_opencv
 
 
 class ImgGenerator():
@@ -110,7 +130,7 @@ class ImgGenerator():
             vegetable_index = 0 if big_type == 'vegetable' else -1
             environment_index = 0 if big_type == 'environment' else -1
             alienpet_index = 0 if big_type == 'pet' else -1
-        query = CVTools.picpath2base64(img_path)
+        query = img2base64(img_path)
         data = {
             'query': query,
             'alienHeadIndex': alienhead_index,
@@ -124,7 +144,7 @@ class ImgGenerator():
         code: int = int(list(data['result_code'].keys())[0])
         err = list(data['result_code'].values())[0]
         if data['img']:
-            img = CVTools.base64CV(data['img'])
+            img = base64cv(data['img'])
         else:
             img = None
 
