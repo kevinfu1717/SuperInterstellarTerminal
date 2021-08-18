@@ -12,7 +12,7 @@
 
 - **C. 技术功能介绍**
 
-  主要的功能点及关键点技术介绍，具体代码较多请Fork后参见项目内脚本
+  主要的功能点及关键点技术介绍，具体代码较多请**Fork**后参见项目内脚本
 
 - **D. 上手及部署**
 
@@ -26,18 +26,18 @@
 
 - 结合Wechaty与PadddlePaddle的各种AI能力，建立一个基于 微信聊天的 **轻社交，结合增强现实技术（AR）+LBS(暂时只基于图像）的星际漂流瓶游戏。** 重新认识你身边的世界，其实早已与外星生命共存。
   
-- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先star或Fork跟踪更新进度**
+- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先Star或Fork跟踪更新进度**
 
-  aistudio地址：<https://aistudio.baidu.com/aistudio/projectdetail/2230251>
+  AI Studio地址：<https://aistudio.baidu.com/aistudio/projectdetail/2230251>
   
 - B站样例视频如下：（建议全屏观看）
 
   [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
 
-- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先star或Fork跟踪更新进度**
+- **欢迎小伙伴推荐地点及地点图片或直接加入本项目，可以先Star或Fork跟踪更新进度**
 
-  github地址：<https://github.com/kevinfu1717/SuperInterstellarTerminal>
-      
+  GitHub地址：<https://github.com/kevinfu1717/SuperInterstellarTerminal>
+
 ## A.2 太空漂流信息
 
 > **你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中**
@@ -58,7 +58,7 @@
 
   <img src="https://ai-studio-static-online.cdn.bcebos.com/7b46c4366e7c47d1b6dc1f262aad801dc2da33b5d2ce41a3875135b8bdb2b2f3" width="700px" /> 
 
-- **更多的剧本、玩法， 请各位GitHub或AI Stuido留言，让我们一起创造！记得要先点收藏（star）或 fork，持续关注更新**
+- **更多的剧本、玩法， 请各位GitHub或AI Stuido留言，让我们一起创造！记得要先点收藏（Star）和 Fork，持续关注更新**
 
 - **扫码加群，按群公告操作即可体验**
 
@@ -284,7 +284,7 @@ cv2.seamlessClone(src, dst, src_mask, center, cv2.NORMAL_CLONE)
 cv2.seamlessClone(src, dst, src_mask, center, cv2.MIXED_CLONE)
 
 # 会把src图变成灰度图合成到dst中->暂时看不到什么好用途
-cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER
+cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER)
 ```
 
 借用别人的图，懒得生成了,左中右分别是：`NORMAL_CLONE`，`MIXED_CLONE`，`MONOCHROME_TRANSFER`：
@@ -325,9 +325,9 @@ cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER
 
 - 一句代码实现遮挡：
 
-【伪代码】 np.where(mask=天空的index,已叠加整个飞船的ar图，原图）
+  【伪代码】 np.where(mask=天空的index,已叠加整个飞船的ar图，原图）
 
-<img src="https://ai-studio-static-online.cdn.bcebos.com/194a64eb13334d778cd86dc6e7b1c39c2448903993ac4a8b8134080285e106d1" width="700px" /> 
+  <img src="https://ai-studio-static-online.cdn.bcebos.com/194a64eb13334d778cd86dc6e7b1c39c2448903993ac4a8b8134080285e106d1" width="700px" /> 
 
 ## C.5 寻找生长在地球的外星植物——vegetateModule.py
 
@@ -538,34 +538,34 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 
 - 简化后的PadlleSeg的cityscapes的SOTA模型（`CityscapesModule.py`需要）
 
-  AIstudio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102892>
+  AI Studio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102892>
 
 - 流沙效果/沙画效果模型（`sandModule.py`需要）
 
-  AIstudio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102698>
+  AI Studio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102698>
 
 - PaddleSeg（`CityscapesModule.py`需要）
 
-  AIstudio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102136>
+  AI Studio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/102136>
 
-  或直接去github：git clone https://github.com/PaddlePaddle/PaddleSeg   
+  或直接去GitHub：`git clone https://github.com/PaddlePaddle/PaddleSeg`   
 
-  或者去gitee：git clone https://gitee.com/PaddlePaddle/PaddleSeg  
+  或者去Gitee：`git clone https://gitee.com/PaddlePaddle/PaddleSeg`
 
 
 - 生成外星人矢量图模型（非必需，若要自己新增生成外星生物才需要）
 
-  AIstudio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/103316>
+  AI Studio数据页：<https://aistudio.baidu.com/aistudio/datasetdetail/103316>
 
 ## D.4 部署过程
 
 1. 申请Wechaty Token [![Powered by Wechaty](https://img.shields.io/badge/Powered%20By-Wechaty-brightgreen.svg)](https://wechaty.js.org) [![Wechaty in Python](https://img.shields.io/badge/Wechaty-Python-blue)](https://github.com/wechaty/python-wechaty)
 
-   具体请访问Wevhaty官网: <https://wechaty.js.org/>
+   具体请访问Wechaty官网: <https://wechaty.js.org/>
 
 2. 快速上手
 
-   请参考[@Lovely-Pig](https://aistudio.baidu.com/aistudio/personalcenter/thirdview/638343)的文章: [教你用AI Studio+wechaty+阿里云白嫖一个智能微信机器人](https://aistudio.baidu.com/aistudio/projectdetail/1836012)
+   请参考[@Lovely-Pig](https://aistudio.baidu.com/aistudio/personalcenter/thirdview/638343)的文章: [教你用AI Studio+Wechaty+阿里云白嫖一个智能微信机器人](https://aistudio.baidu.com/aistudio/projectdetail/1836012)
 
 3. 云服务器
 
@@ -684,7 +684,7 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 
 希望更多小伙伴能贡献一下自己的脑洞，基于此项目，觉得还可以优化的游戏方式或游戏剧本。希望留言或评论。感谢！
 
-希望小伙伴们觉得此项目不错的**点个赞或FORK**。能从头看到这里的很不容易了。非常感谢！！
+希望小伙伴们觉得此项目不错的**点个赞（Star）和Fork**。能从头看到这里的很不容易了。非常感谢！！
 
 ## E.3 Reference/参考内容
 
