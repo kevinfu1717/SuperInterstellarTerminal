@@ -3,7 +3,7 @@
 # A. 项目介绍
 
 
-## A1. 一句话介绍：
+## A.1 一句话介绍：
  - 基于**微信聊天的 结合增强现实技术（AR）+LBS(暂时基于图像）** 的**星际漂流瓶** 的轻社交游戏。
 
 重新认识你身边的世界，认清你身边的是否真的是地球人，其实早已与外星生命共存。
@@ -22,12 +22,11 @@
 | **外星人换脸**，外星人脸与地球人脸融合效果的优化 |请跳转到本页中的C.4  | alienHeadModule.py|
 | **YUV颜色空间实现颜色图案迁移**，基于CV技术生成外星植物|请跳转到本页中的C.5  | vegetateModule.py|
 | **PaddleHub的msgnet实现图像迁移**，基于深度学习生成类流沙或沙画效果 |请跳转到本页中的C.6  | sandModule.py + msgnet文件夹|
-| **wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 |请跳转到本页中的D | bot文件夹|
- 
- 
+| **Wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 |请跳转到本页中的D | bot文件夹|
+
 <img src="https://ai-studio-static-online.cdn.bcebos.com/d7b2a14b8b194088809eec62817b8edb4e0190220dc8417f834ff63098454625" width="1000px" /> 
- 
- 
+
+
  ## A.3 太空漂流信息
 
 > **你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中**
@@ -48,7 +47,7 @@
 - 可能是让用户帮忙寻找它丢失的某个外星宠物（外星生物），或者帮它找到急需用于治疗的外星植物，也可能是让你帮忙找到正在被通缉的外星人囚犯。
 
   
-      
+  ​    
 ## A.5 体验视频：（建议全屏观看）
 
 [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
@@ -59,7 +58,7 @@
       github地址：[https://github.com/kevinfu1717/SuperInterstellarTerminal](https://github.com/kevinfu1717/SuperInterstellarTerminal)
    
    - **扫码加群，按群公告操作即可体验**      <img src="https://ai-studio-static-online.cdn.bcebos.com/e71c430920e14eb8b33aa5d630dde360045944b62cdf43f2a178eeb4189ecdc7" width="150px" /> 
-   
+
 
 
 
@@ -68,7 +67,7 @@
  - **地球并不只是人类的天下，其实有数万名外星人及其外星低等生物生活在我们当中，他们有的因为母星被毁有的因为星际战乱而选择到地球避难。**
 
  - **银河星际移民局则管理并协调着他们在地球的生活。借助超高级科技，他们隐藏原来的外观，装扮成是普通地球人，我们根本分辨不出来，说不定，站在你旁边的就是一位外星友人。**
- 
+
   - **同时，他们也带来了外星的低等生物及外星植物，通过超科技把他们隐藏起来，装扮成地球物种或我们完全看不到。**
 
 
@@ -151,15 +150,14 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
   ├── CityscapesModule.py
   └── PetModel
       ├── modelCityscape.pdparams
-      └── pretrainedCityscape.pdparams
+      ├── pretrainedCityscape.pdparams
       └──mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml
   ```
   `pretrainedCityscape.pdparams`下载地址：[https://bj.bcebos.com/paddleseg/dygraph/cityscapes/ocrnet_hrnetw48_mapillary/pretrained.pdparams](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/ocrnet_hrnetw48_mapillary/pretrained.pdparams)
 
    `modelCityscape.pdparams`下载地址：[https://bj.bcebos.com/paddleseg/dygraph/cityscapes/mscale_ocr_hrnetw48_cityscapes_autolabel_mapillary/model.pdparams](https://bj.bcebos.com/paddleseg/dygraph/cityscapes/mscale_ocr_hrnetw48_cityscapes_autolabel_mapillary/model.pdparams)
-   
-  `mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml` 为PaddleSeg模型的yml文件
   
+  `mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml` 为PaddleSeg模型的yml文件
 
 
 
@@ -642,7 +640,7 @@ ImgGenerateModule可以单独使用或`app.py`也可单独建立flask的图像�
 
 8. 设置环境变量
 
-   endpoint的设置可参考: [访问域名（Endpoint）](https://help.aliyun.com/document_detail/31837.html?spm=a2c4g.11186623.6.611.554e6d13isyAAt)
+   `OSS_ENDPOINT`的设置可参考: [访问域名（Endpoint）](https://help.aliyun.com/document_detail/31837.html?spm=a2c4g.11186623.6.611.554e6d13isyAAt)
 
    ```bash
    $ export WECHATY_PUPPET="wechaty-puppet-service"
