@@ -22,7 +22,7 @@
 | **外星人换脸**，外星人脸与地球人脸融合效果的优化 |请跳转到本页中的C.4  | alienHeadModule.py|
 | **YUV颜色空间实现颜色图案迁移**，基于CV技术生成外星植物|请跳转到本页中的C.5  | vegetateModule.py|
 | **PaddleHub的msgnet实现图像迁移**，基于深度学习生成类流沙或沙画效果 |请跳转到本页中的C.6  | sandModule.py + msgnet文件夹|
-| **wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 | | |
+| **wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 |请跳转到本页中的D | bot文件夹|
  
  
 <img src="https://ai-studio-static-online.cdn.bcebos.com/d7b2a14b8b194088809eec62817b8edb4e0190220dc8417f834ff63098454625" width="1000px" /> 
