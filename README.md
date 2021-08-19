@@ -1,33 +1,31 @@
 # 星际终端 Super Interstellar Terminal (A Wechat Social Game with AR and LBS)
 
+ - 基于**微信聊天的 结合增强现实技术（AR）+LBS(暂时基于图像）** 的**星际漂流瓶** 的轻社交游戏。重新认识你身边的世界，或许我们早已与外星生命共同生活着。
+
+
 # A. 项目介绍
 
 
-## A.1 一句话介绍：
- - 基于**微信聊天的 结合增强现实技术（AR）+LBS(暂时基于图像）** 的**星际漂流瓶** 的轻社交游戏。
+## A.1 项目模块：
+> 项目由下面的模块组成，每个模块都可以单独使用，也可组合使用，如：直接按需就调用图像生成外星人、外星生物、外星植物、外星建筑
 
-重新认识你身边的世界，认清你身边的是否真的是地球人，其实早已与外星生命共存。
-     
-
-## A.2 项目中你可参考或借鉴的部分：
-> 项目中每个模块都可以单独使用，也可组合使用，如：直接按需就调用图像生成外星人、外星生物、外星植物、外星建筑
 
 
 
 | 简要 | 具体描述 | 项目中的代码及模型 |
 | -------- | -------- | -------- |
-| **基于LSGAN的外星人生成**，利用爬虫与GAN生成我们想要的东西的过程 | 请跳转到本页中的C.1 | Train.zip |
-| **快速调用PaddleSeg的cityscapes模型**，进行18类常见物体的分割 |请跳转到本页中的C.2 | CityscapesModule.py +PetModel文件夹|
-| **OpenCV的seamlessClone实现图像融合**，呈现各种AR效果,遮挡关系等 |请跳转到本页中的C.3  | alienPetModule.py|
-| **外星人换脸**，外星人脸与地球人脸融合效果的优化 |请跳转到本页中的C.4  | alienHeadModule.py|
-| **YUV颜色空间实现颜色图案迁移**，基于CV技术生成外星植物|请跳转到本页中的C.5  | vegetateModule.py|
-| **PaddleHub的msgnet实现图像迁移**，基于深度学习生成类流沙或沙画效果 |请跳转到本页中的C.6  | sandModule.py + msgnet文件夹|
-| **Wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 |请跳转到本页中的D | bot文件夹|
+| **1.基于LSGAN的外星生物生成**，利用爬虫与GAN生成我们想要的东西的过程 | 请跳转到本页中的C.1 | Train.zip |
+| **2.快速调用PaddleSeg的cityscapes模型**，进行18类常见物体的分割 |请跳转到本页中的C.2 | CityscapesModule.py +PetModel文件夹|
+| **3.OpenCV的seamlessClone实现图像融合**，呈现各种AR效果,遮挡关系等 |请跳转到本页中的C.3  | alienPetModule.py|
+| **4.外星人换脸**，外星人脸与地球人脸融合效果的优化 |请跳转到本页中的C.4  | alienHeadModule.py|
+| **5.YUV颜色空间实现颜色图案迁移**，基于CV技术生成外星植物|请跳转到本页中的C.5  | vegetateModule.py|
+| **6.PaddleHub的msgnet实现图像迁移**，基于深度学习生成类流沙或沙画效果 |请跳转到本页中的C.6  | sandModule.py + msgnet文件夹|
+| **7.Wechaty漂流瓶游戏**，微信漂流瓶及通过开发者模式控制整个流程 |请跳转到本页中的D | bot文件夹|
 
 <img src="https://ai-studio-static-online.cdn.bcebos.com/d7b2a14b8b194088809eec62817b8edb4e0190220dc8417f834ff63098454625" width="1000px" /> 
 
 
- ## A.3 太空漂流信息
+ ## A.2 太空漂流信息
 
 > **你可能收到来自一个未知星域发过来的漂流瓶，你也可以把你想抒发的情感发向星际中**
 
@@ -38,7 +36,7 @@
 - 甚至，在一个你意想不到的时刻会收到想象之外的漂流瓶信息。发送与接收漂流瓶都可以提升等级噢！
 
 
-## A.4 增强现实技术（AR）+位置服务（LBS）的游戏
+## A.3 增强现实技术（AR）+位置服务（LBS）的游戏
 
 > **接收漂流瓶任务，或主动出击，寻找身边潜藏的外星人、外星生物（宠物）、外星植物、外星建筑**
 
@@ -48,7 +46,7 @@
 
   
   ​    
-## A.5 体验视频：（建议全屏观看）
+## A.4 体验视频：（建议全屏观看）
 
 [![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](https://www.bilibili.com/video/BV1hL411E79M?p=1&share_source=copy_web)
 
@@ -133,7 +131,7 @@
 
   <img src="https://ai-studio-static-online.cdn.bcebos.com/2628476cfe6e4e20b20cfc01994e0065d6abce5bf1e541eb942fb2e07ebc181d" width="550px" />
 
-## C.3 识别现场环境——CityscapesModule.py
+## C.2 识别现场环境——CityscapesModule.py
 
 ### a. 模型
 
