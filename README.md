@@ -55,7 +55,7 @@
    
       github地址：[https://github.com/kevinfu1717/SuperInterstellarTerminal](https://github.com/kevinfu1717/SuperInterstellarTerminal)
    
-   - **扫码加群，按群公告操作即可体验**      <img src="https://ai-studio-static-online.cdn.bcebos.com/e71c430920e14eb8b33aa5d630dde360045944b62cdf43f2a178eeb4189ecdc7" width="150px" /> 
+   - **扫码加机器人即可体验，添加申请请填“星际终端”**      <img src="https://ai-studio-static-online.cdn.bcebos.com/ee935680818e44c9b171da707801de391250fdafc41a47e7af38053c596281f7" width="150px" /> 
 
 
 
