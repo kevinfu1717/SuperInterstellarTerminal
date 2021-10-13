@@ -75,6 +75,22 @@
 
 # C. 项目中的技术功能介绍
 
+- 主要模块结构及功能：
+
+  ```bash
+  .
+  ├── app.py                      # 把图像处理部分作为一个服务端，可供post调用生成图片
+  ├── ImgGenerateModule.py        # 整合所有图像生成的总模块
+  ├── bot文件夹                   # 机器人控制相关及漂流瓶逻辑
+  ├── TrainAlienFiles文件夹       # 生成外星宠物的图片
+  ├── alienHeadModule 及相关文件  # 外星人头换脸
+  ├── alienPetModule 及相关文件   # 生成外星宠物
+  ├── CityscapesModule 及相关文件 # 识别图片中物体并对他们进行定位
+  ├── vegetaModule 及相关文件     # 生成外星植物
+  └── sandModule 及相关文件       # 生成外星建筑
+    
+  ```
+
 ## C.1 AI寻找你身边的外星生物
 
 ### 建立外星人图鉴，让我们看一下AI预测的外星人形象是怎样的
@@ -446,7 +462,7 @@ landmark的68个人脸关键点模型具体介绍请见官方介绍：<https://g
       └── style_paddle.pdparams 
     
   ```
- `msgnet`需下载模型文件并解压，符合上述文件结构，下载地址：[https://bj.bcebos.com/v1/ai-studio-online/5919ef2552ff4b9ba0cab688e582ca4f6d0c627dfee44bd1b8cef1e5e4e6c9b5?responseContentDisposition=attachment%3B%20filename%3Dmsgnet.zip&authorization=bce-auth-v1%2F0ef6765c1e494918bc0d4c3ca3e5c6d1%2F2021-08-01T14%3A26%3A43Z%2F-1%2F%2F3708cfcef6ae924c17e82d580129cd405d4629d072cc6438b7b37cf08f2e4ae8](https://bj.bcebos.com/v1/ai-studio-online/5919ef2552ff4b9ba0cab688e582ca4f6d0c627dfee44bd1b8cef1e5e4e6c9b5?responseContentDisposition=attachment%3B%20filename%3Dmsgnet.zip&authorization=bce-auth-v1%2F0ef6765c1e494918bc0d4c3ca3e5c6d1%2F2021-08-01T14%3A26%3A43Z%2F-1%2F%2F3708cfcef6ae924c17e82d580129cd405d4629d072cc6438b7b37cf08f2e4ae8)
+ `msgnet`需下载模型文件并解压到msgnet文件夹下，参考上述文件结构：[下载地址](https://bj.bcebos.com/v1/ai-studio-online/5919ef2552ff4b9ba0cab688e582ca4f6d0c627dfee44bd1b8cef1e5e4e6c9b5?responseContentDisposition=attachment%3B%20filename%3Dmsgnet.zip&authorization=bce-auth-v1%2F0ef6765c1e494918bc0d4c3ca3e5c6d1%2F2021-08-01T14%3A26%3A43Z%2F-1%2F%2F3708cfcef6ae924c17e82d580129cd405d4629d072cc6438b7b37cf08f2e4ae8)
 
 ### b. 作用
 
