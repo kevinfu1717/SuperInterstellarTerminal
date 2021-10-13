@@ -141,11 +141,13 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 
 ### b. 相关文件
 
-- 目录结构（单独使用本模块，只需修改`CityscapesModule.py`中的 im_path ）：
+- 必要文件目录结构：
 
   ```bash
   .
-  ├── CityscapesModule.py
+  ├── CityscapesModule.py  
+  ├── testpic
+  ├── PaddleSeg
   └── PetModel
       ├── modelCityscape.pdparams
       ├── pretrainedCityscape.pdparams
@@ -157,7 +159,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
   
   `mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml` 为PaddleSeg模型的yml文件
 
-
+单独使用本模块，需修改mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml中model的pretrained路径到真实的路径，然后修改`CityscapesModule.py`中的 im_path 改为你想要的图片即可
 
 
 
@@ -195,6 +197,18 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
 - `ConfigPet.py`中每个dict就是一种外星生物，该外星生物的id就是那个dict的key。
 
 - `ConfigPet.py`中的areaIndex对应的就是cityScapes返回的物体ID，例如，areaIndex=10，则代表此生物是出现在天空中。
+
+- 必要文件目录结构：
+
+  ```bash
+  .
+  ├── alienPetModule.py  
+  ├── ConfigPet.py
+  ├── testpic
+  └── PetPic
+  
+  ```
+
 
 ### b. 作用
 
@@ -272,11 +286,25 @@ cv2.seamlessClone(src, dst, src_mask, center, cv2.MONOCHROME_TRANSFER)
 
 ## C.4 外星人显形——alienHeadModule.py
 
-### a. 模型
+### a. 准备
 
-**Paddlehub landmark模型**
+- Paddlehub landmark模型
 
 landmark的68个人脸关键点模型具体介绍请见官方介绍：<https://gitee.com/PaddlePaddle/PaddleHub/tree/release/v2.1/modules/image/keypoint_detection/face_landmark_localization>
+
+- 必要文件目录结构：
+
+  ```bash
+  .
+  ├── alienHeadModule.py  
+  ├── ConfigHead.py
+  ├── landmarkModule.py
+  ├── labelmeReader.py
+  ├── CVTools.py
+  ├── testpic
+  └── HeadPic
+  
+  ```
 
 ### b. 作用
 
@@ -339,9 +367,20 @@ landmark的68个人脸关键点模型具体介绍请见官方介绍：<https://g
 
 ### a. 准备
 
-找一些外星植物的图片，实现非深度学习的基于**图像技术**的颜色纹理迁移。也可以是一些想要的风格的图，如下图中的任意一种
+- 找一些外星植物的图片，实现非深度学习的基于**图像技术**的颜色纹理迁移。也可以是一些想要的风格的图，如下图中的任意一种
 
 <img src="https://ai-studio-static-online.cdn.bcebos.com/798c984bd1f0489b8f7537c04d804ed8ef3b36b0265845a696107f1edbdbb82f" width="600px" />
+
+- 必要文件目录结构：
+
+  ```bash
+  .
+  ├── vegetateModule.py  
+  ├── ConfigVegetae.py
+  ├── testpic
+  └── VegPic
+  
+  ```
 
 ### b. 作用
 
@@ -393,7 +432,21 @@ landmark的68个人脸关键点模型具体介绍请见官方介绍：<https://g
 
 ### a. 准备
 
-使用Msgnet迁移训练的沙画模型，实现基于**深度学习**的风格迁移。 大家可以对比一下5中的外星植物的效果，那是基于CV技术的迁移
+- 使用Msgnet迁移训练的沙画模型，实现基于**深度学习**的风格迁移。 大家可以对比一下5中的外星植物的效果，那是基于CV技术的迁移
+
+- 必要文件目录结构：
+
+  ```bash
+  .
+  ├── sandModule.py  
+  ├── ConfigVegetae.py
+  ├── testpic
+  └── msgnet
+      ├── style_paddle.pdopt
+      └── style_paddle.pdparams 
+    
+  ```
+ `msgnet`需下载模型文件并解压，符合上述文件结构，下载地址：[https://bj.bcebos.com/v1/ai-studio-online/5919ef2552ff4b9ba0cab688e582ca4f6d0c627dfee44bd1b8cef1e5e4e6c9b5?responseContentDisposition=attachment%3B%20filename%3Dmsgnet.zip&authorization=bce-auth-v1%2F0ef6765c1e494918bc0d4c3ca3e5c6d1%2F2021-08-01T14%3A26%3A43Z%2F-1%2F%2F3708cfcef6ae924c17e82d580129cd405d4629d072cc6438b7b37cf08f2e4ae8](https://bj.bcebos.com/v1/ai-studio-online/5919ef2552ff4b9ba0cab688e582ca4f6d0c627dfee44bd1b8cef1e5e4e6c9b5?responseContentDisposition=attachment%3B%20filename%3Dmsgnet.zip&authorization=bce-auth-v1%2F0ef6765c1e494918bc0d4c3ca3e5c6d1%2F2021-08-01T14%3A26%3A43Z%2F-1%2F%2F3708cfcef6ae924c17e82d580129cd405d4629d072cc6438b7b37cf08f2e4ae8)
 
 ### b. 作用
 
