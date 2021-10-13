@@ -175,7 +175,7 @@ PaddleSeg训练了一个在cityscapes数据集上SOTA的模型。却很低调，
   
   `mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml` 为PaddleSeg模型的yml文件
 
-单独使用本模块，需修改mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml中model的pretrained路径到真实的路径，然后修改`CityscapesModule.py`中的 im_path 改为你想要的图片即可
+- 使用本模块，需修改'mscale_ocr_cityscapes_autolabel_mapillary_ms_val.yml'中model的pretrained路径到真实的模型路径，然后修改`CityscapesModule.py`中的 im_path 改为你想要的图片即可
 
 
 
