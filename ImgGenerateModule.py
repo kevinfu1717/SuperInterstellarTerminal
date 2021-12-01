@@ -40,7 +40,7 @@ class ImgGenerator():
         self.resultCode = resultCode
         self.inputSize=inputSize
         self.picSizeLimit = picSizeLimit
-        ##
+        ## 环境识别
         try:
             self.seg = cistyScaperClass(
                 debug=debug,
@@ -58,13 +58,13 @@ class ImgGenerator():
             self.seg=ss()
             print(' cityscapes module error', e)
 
-        ##
+        ## 换头
         try:
             self.transHead = TransHeadClass(debug=debug, sideAngleThreshold=15, picPath=picPathHead)
         except:
             pass
 
-        #
+        # 换植物
         try:
             self.vegetation = vegetateTransClass(picPath=picPathVeg)
             print('self.vegetation sucess:',self.vegetation)
@@ -76,7 +76,7 @@ class ImgGenerator():
 
 
         # print('ImgGenerator resultCode', resultCode)
-
+        # 换外星动物
         try:
             self.petModule = alienPetClass(picPathPet)
         except Exception as e:
@@ -150,7 +150,7 @@ class ImgGenerator():
         else:
             print('ImgGenerator:last process not sucess')
             return dst, dst, rc
-
+    # 
     def alienHeadProcess(self, alienHeadIndex, dst):
         img = dst
         dic = {}
