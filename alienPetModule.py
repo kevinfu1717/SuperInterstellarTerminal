@@ -22,6 +22,7 @@ except:
          {98: 'charterIndex越界'},         
          {103:'分割失败'},        
          {104:'没有试合区域存在alien'},
+         {201: '没有试合区域存在alien pet'},
          ]
 
 class alienPetClass():
@@ -37,23 +38,30 @@ class alienPetClass():
         self.petPicPath=petPicPath
         self.areaThreshold=10000 # pixel of the area, area should be large enough, 
         # print('petPicPath:',petPicPath,'alienDict,',(self.alienDict))
-    def checkClassArea(self,pred,classNums):
-        classArea=[]
-        classOkArea={}
-        
-        for index in range(classNums):
-            temp=np.argwhere(pred==index)
-            classArea.append(temp)
-            if len(temp)>self.areaThreshold:##  pixel number of area
-                classOkArea[index]=temp
-        return classOkArea
+
+    def checkClassArea(self,pred,classNums):
+        ##检查cityscape的分割结果是否可以满足某个 classID的外星生物出现
+        classArea=[]
+        classOkArea={}
+        
+        for index in range(classNums):
+            temp=np.argwhere(pred==index)
+            classArea.append(temp)
+            if len(temp)>self.areaThreshold:##  pixel number of area is large enough? 符合出现的区域要足够大
+
+                classOkArea[index]=temp
+        #生成key为外星生物id，value为可该外星生物可出现的区域的dict
+        return classOkArea
+
     def chooseCheckAlien(self,alienIndex,classOkArea):
+        #根据alienIndex，及可出现的外星生物区域dict， 选择出现的外星生物
+
         #print(type(classOkArea),classOkArea.keys())
         #list of the index of area in the image
         imgAreaList=np.array(list(classOkArea.keys()),'uint8')
         print('imgAreaList',imgAreaList)
         alienIndexList=[]
-        ## random alien pet 
+        ## alienindex=0 则 random alien pet 
         if alienIndex==0:          
             alienIndexList=list(self.alienDict.keys())
             random.shuffle(alienIndexList)
@@ -88,7 +96,7 @@ class alienPetClass():
                 assert len(src.shape)>2
                 assert scaleRatio>0
                 assert scaleRatio<1
-                # which seamlessclone method to use
+                # 是否用mixclone，which seamlessclone method to use
                 mixclone=self.alienDict[alienIndex]['mixTimes']
 
                 # adjust the size of src(alien) depend on the user`s image
@@ -97,15 +105,17 @@ class alienPetClass():
                     srcRatio=min(image.shape[:2])*scaleRatio/src.shape[0]
                 else:
                     srcRatio=min(image.shape[:2])*scaleRatio/src.shape[1]
-                ##
+                ## 随机大小 0.8~1
                 srcRatio*=random.uniform(0.8, 1)
-                ##
+                ## 对src图片进行缩放
                 src=cv2.resize(src,None,fx=srcRatio,fy=srcRatio)
                 print('mix_clone =',mixclone,'src newsize',src.shape)
+                
+                #可根据实际效果调整dilateratio的值
                 dilateRatio=0.1
                 if mixclone==1:
                     dilateRatio+=0.1
-                #
+                # 
                 leftTop=cloneLeftTop(pred,src,areaIndex,dilateRatio)
 
                 #
@@ -113,8 +123,10 @@ class alienPetClass():
                     print('leftTop',leftTop)
                     #
                     if mixclone>0:
+                        # src（外星pet图像）整个复制，复制进去将是一个正方形或长方形的图用于粘贴到底图
                         maskSrc=255*np.ones(src.shape,src.dtype)
                     else:
+                        # src图像（外星pet图像）中，亮度超过threshold的会变透明,其他非透明部分会用于粘贴到底图
                         maskSrc=maskOfWhiteBG(src,threshold=240)
                     #maskSrc=255*np.ones(src.shape,src.dtype)
                     print('maskSrc',maskSrc.shape)
@@ -142,6 +154,7 @@ class alienPetClass():
                         cv2.imwrite('mask'+str(areaIndex)+'.jpg',np.where(pred==areaIndex,255,0))
                     if self.alienDict[alienIndex]['mask']==1:
                         print('combine',combine.shape,image.shape)
+                        # 根据pred 图像中的index，符合出现的areaindex的像素点，则用合成图combine的颜色 否则用image图的颜色
                         combine[:,:,0]=np.where(pred==areaIndex,combine[:,:,0],image[:,:,0])
                         combine[:,:,1]=np.where(pred==areaIndex,combine[:,:,1],image[:,:,1])
                         combine[:,:,2]=np.where(pred==areaIndex,combine[:,:,2],image[:,:,2])
@@ -165,6 +178,7 @@ class alienPetClass():
         return self.process(image,classMask,classNums, alienIndex)
 
 def leftTop2Center(leftTop,src):
+    # 根据左上角点，换算回中心点
     center=(int(round(leftTop[0]+src.shape[1]/2)),int(round(leftTop[1]+src.shape[0]/2)))
 
     return center
@@ -174,6 +188,7 @@ def randomFlip(src):
     return src
 def erode2LeftTop(srcSize,pred,areaIndex,ratio=1):
     leftTop=[]
+    ## erode核，看效果定义ratio
     kernel=np.ones((int(ratio*srcSize[0]),int(ratio*srcSize[1])),np.uint8)
     ##
     if kernel.shape[0]%2==0:
@@ -189,7 +204,9 @@ def erode2LeftTop(srcSize,pred,areaIndex,ratio=1):
     predMask=np.array(predMask,'uint8')
     
     print(predMask.shape,kernel.shape)
-    stay=cv2.erode(predMask,kernel)    
+    # erode后的作为mask
+    stay=cv2.erode(predMask,kernel)
+
     predStay=np.argwhere(stay==1)#[y,x]
     print('predStay',len(predStay))
     if len(predStay)>0:
@@ -197,8 +214,9 @@ def erode2LeftTop(srcSize,pred,areaIndex,ratio=1):
         ars=predStay[random.randint(0,len(predStay)-1)]
         leftTop=np.array([ars[1]-srcSize[1],ars[0]-srcSize[0]],'int32')# [x,y]
     return leftTop
+
 def dilate(predMask,areaIndex,ratio=1):
-    
+    # 封装dilate，确保dilate的kernel是奇数，防止报错
     kernel=np.ones((int(ratio*predMask.shape[0]),int(ratio*predMask.shape[1])),np.uint8)
     ##
     if kernel.shape[0]%2==0:
@@ -206,7 +224,9 @@ def dilate(predMask,areaIndex,ratio=1):
     if kernel.shape[1]%2==0:
         kernel=kernel[:,:kernel.shape[1]-1]
     return cv2.dilate(predMask,kernel)
+
 def cloneLeftTop(pred,src,areaIndex,dilateRatio=0.1): 
+    #
     leftTop=[]
     #print('srcSize',src.shape)
     srcSize=np.array(src.shape[:2],'int32')
@@ -220,15 +240,18 @@ def cloneLeftTop(pred,src,areaIndex,dilateRatio=0.1):
 
 def maskOfWhiteBG(img,threshold=240):
     maskResult=np.zeros(img.shape,img.dtype)
+    #转到hsv空间检测亮度
     hsv=cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
     vv=hsv[:,:,2]
     r1=max(vv.shape[0]//60,1)
-    r2=r1+vv.shape[0]//8
+    r2=r1+vv.shape[0]//4
     if r1//2==0:r1+=1
     if r2//2==0:r2-=1
+    #bl为亮度超过threshold的mask图像
     ret,bl=cv2.threshold(vv,threshold,255,cv2.THRESH_BINARY_INV)
     print('bl',bl.shape,r1,r2)
-    # cv2.imwrite('bl.jpg',bl)
+    
+    # 开闭运算 去除mask中的很小很碎的杂点，根据情况看是否使用
     mask = cv2.morphologyEx(bl, cv2.MORPH_OPEN,
                             cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (r1, r1))
                             )
@@ -241,7 +264,9 @@ def maskOfWhiteBG(img,threshold=240):
     maskResult[:,:,2]=mask
     print('final mask',mask.shape)
     return np.array(mask,'uint8')
+
 def noneZeroIndex(array_2D,axis):
+    # 从图像中截取非0区域的pixel起始，与结束位置
     # array_2D = np.array(
     #     [[0, 0, 2, 3, 0, 4], [0, 0, 0, 0, 0, 0], [1, 0, 2, 3, 4, 0], [1, 0, 2, 3, 4, 9], [0, 0, 0, 0, 0, 0]])
     # axis = 1
@@ -251,7 +276,9 @@ def noneZeroIndex(array_2D,axis):
     # print(newline)
     last =  - 1*(newline != 0).argmax(axis=0)
     return first, last
+
 def roiAreaCheck(src,maskSrc,dst,leftTop):
+    ## 计算外星pet图像粘贴到底图时，超出底图的部分将被裁走
     rightdown=[leftTop[0]+src.shape[1],leftTop[1]+src.shape[0]]
     #cal the area out of  dst. x1,y1 may ≥0。 x2,y2 may ≤0
     x1=-1*min(0,leftTop[0])
