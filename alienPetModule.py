@@ -27,10 +27,10 @@ except:
 
 class alienPetClass():
     def __init__(self,
-    petPicPath,
-    areaThreshold=10000,
-    configAlienPet=configAlienPet,
-    debug=False):
+        petPicPath,
+        areaThreshold=10000,
+        configAlienPet=configAlienPet,
+        debug=False):
 
         self.debug=debug
         self.alienDict=configAlienPet['alien']        
@@ -38,20 +38,20 @@ class alienPetClass():
         self.petPicPath=petPicPath
         self.areaThreshold=10000 # pixel of the area, area should be large enough, 
         # print('petPicPath:',petPicPath,'alienDict,',(self.alienDict))
+    def checkClassArea(self, pred, classNums):
 
-    def checkClassArea(self,pred,classNums):
-        ##检查cityscape的分割结果是否可以满足某个 classID的外星生物出现
-        classArea=[]
-        classOkArea={}
-        
-        for index in range(classNums):
-            temp=np.argwhere(pred==index)
-            classArea.append(temp)
-            if len(temp)>self.areaThreshold:##  pixel number of area is large enough? 符合出现的区域要足够大
+    ##检查cityscape的分割结果是否可以满足某个 classID的外星生物出现
+        classArea = []
+        classOkArea = {}
+        for index in range(classNums):
+            temp = np.argwhere(pred == index)
+            classArea.append(temp)
+            if len(temp) > self.areaThreshold:  ##  pixel number of area is large enough? 符合出现的区域要足够大
 
-                classOkArea[index]=temp
-        #生成key为外星生物id，value为可该外星生物可出现的区域的dict
-        return classOkArea
+                classOkArea[index] = temp
+         # 生成key为外星生物id，value为可该外星生物可出现的区域的dict
+        return classOkArea
+
 
     def chooseCheckAlien(self,alienIndex,classOkArea):
         #根据alienIndex，及可出现的外星生物区域dict， 选择出现的外星生物
